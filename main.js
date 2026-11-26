@@ -18,7 +18,8 @@ const timeBar = document.getElementById("time");
 const arrow = document.getElementById("arrow");
 const caseV = document.getElementById("case");
 const pvPlayer = document.getElementById("pvPlayer");
-const game = document.getElementById("game")
+const game = document.getElementById("game");
+const pvsPris = document.getElementById("pvsPris");
 
 const WIDTH=1300;
 const HEIGHT=700;
@@ -46,6 +47,7 @@ let ennemiTurn=false;
 let arrowX=0;
 let pvsPlayer=150;
 let currentArrow=0;
+let didPunched=false;
 
 sigma.style.visibility = "visible";
 sigma.style.left = "500px";
@@ -113,7 +115,7 @@ function hit(cibleX,cibleY){
     }
     else{
         let dist = Math.sqrt((Math.abs(centerX-realPosX)**2)+(Math.abs(centerY-realPosY)**2))
-        pvsInfliges = Math.abs((power*.75)/(dist/10))
+        pvsInfliges = Math.abs((power*.75)/(dist/15))
     }
     pvsEnnemi-=pvsInfliges;
     pvEnnemi.style.width=pvsEnnemi + "px";
@@ -124,8 +126,9 @@ function hit(cibleX,cibleY){
 }
 
 function prendDegat(){
-    let degatsSubis = Math.abs((arrowX+150)-600)/5+10
-    pvsPlayer -=degatsSubis
+    let degatsSubis = Math.abs((arrowX+150)-600)/5+10;
+    pvsPlayer -=degatsSubis;
+    return degatsSubis;
 }
 
 function mainLoop(){
@@ -193,7 +196,7 @@ function mainLoop(){
     if (didHit===true &&hidCount<100){
         hidCount+=1;
     }
-    if (hidCount===100){
+    if (hidCount===100&&didHit===true){
         didHit=false;
         hidCount=0;
         cible.style.visibility="hidden";
@@ -233,63 +236,83 @@ function mainLoop(){
     timeBar.style.height=timeCount+"px";
     timeBar.style.top=(200-timeCount)+202+"px";
     }
+
     if (ennemiTurn===true){
         if (keys["ArrowUp"]){
-            console.log("haut")
             if (pvsPlayer>0){
                 ennemiTurn=false;
                 if (currentArrow===0){
-                    prendDegat();
+                    pvsPris.textContent=prendDegat();
                 }
                 else{
-                    pvsPlayer-=75
+                    pvsPlayer-=75;
+                    pvsPris.textContent=75;
                 }
+            pvsPris.style.visibility="visible";
+            didPunched=true;
         }
         }
         if (keys["ArrowDown"]){
-            console.log("bas")
             if (pvsPlayer>0){
                 ennemiTurn=false;
             if (currentArrow===1){
-                prendDegat();
+                pvsPris.textContent=prendDegat();
             }
             else{
-                pvsPlayer-=75
+                pvsPlayer-=75;
+                pvsPris.textContent=75;
             }
+            pvsPris.style.visibility="visible";
+            didPunched=true;
         }
         }
         if (keys["ArrowLeft"]){
-            console.log("gauche")
             if (pvsPlayer>0){
                 ennemiTurn=false;
                 if (currentArrow===2){
-                    prendDegat();
+                    pvsPris.textContent=prendDegat();
             }
             else{
-                pvsPlayer-=75
+                pvsPlayer-=75;
+                pvsPris.textContent=75;
             }
+            pvsPris.style.visibility="visible";
+            didPunched=true;
         }
         }
         if (keys["ArrowRight"]){
-            console.log("droite")
             if (pvsPlayer>0){
                 ennemiTurn=false;
             if (currentArrow===3){
-                    prendDegat();
+                    pvsPris.textContent=prendDegat();
             }
             else{
-                pvsPlayer-=75
+                pvsPlayer-=75;
+                pvsPris.textContent=75;
             }
+            pvsPris.style.visibility="visible";
+            didPunched=true;
         }
         }
-        console.log(pvsPlayer);
-        pvPlayer.style.width=((pvsPlayer*600)/150)+"px";
         if (arrowX<500){
             arrowX+=10;
         }
         else{
             arrow.style.visibility="hidden";
+            pvsPlayer-=30
         }
+        pvPlayer.style.width=((pvsPlayer*600)/150)+"px";
+    }
+    if (didPunched===true && hidCount<100){
+        hidCount+=1
+        console.log(hidCount)
+    }
+    if (hidCount===100&&didPunched===true){
+        hidCount=0;
+        didPunched=false;
+        caseV.style.visibility="hidden";
+        arrow.style.visibility="hidden";
+        pvsPris.style.visibility='hidden';
     }
     arrow.style.left=(arrowX+150)+"px";
     requestAnimationFrame(mainLoop);
