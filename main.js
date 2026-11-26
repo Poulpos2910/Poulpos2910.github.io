@@ -1,4 +1,5 @@
-let heads = ["sigma","donald","terminator","gros","militaire","natha"];
+const heads = ["sigma","donald","terminator","gros","militaire","natha"];
+const arrows = ["↑","↓","←","→"]
 // const buttonTest = document.
 
 const cible = document.getElementById("cible");
@@ -14,8 +15,15 @@ const hitBar = document.getElementById("barre");
 const hitCursor = document.getElementById("hitCursor")
 const pvsMis = document.getElementById("pvsInfliges")
 const timeBar = document.getElementById("time");
+const arrow = document.getElementById("arrow");
+const caseV = document.getElementById("case");
+const pvPlayer = document.getElementById("pvPlayer");
+const game = document.getElementById("game")
 
-let pvsEnnemi = 100
+const WIDTH=1300;
+const HEIGHT=700;
+
+let pvsEnnemi = 100;
 let cibleX = 600;
 let cibleY = 200;
 let speedH = 0;
@@ -34,6 +42,10 @@ let pvsInfliges = 0;
 let hidCount=0;
 let didHit=false;
 let timeCount=200;
+let ennemiTurn=false;
+let arrowX=0;
+let pvsPlayer=150;
+let currentArrow=0;
 
 sigma.style.visibility = "visible";
 sigma.style.left = "500px";
@@ -46,8 +58,8 @@ let keys = {};
 document.addEventListener("keydown",(event) => {keys[event.key] = true});
 document.addEventListener("keyup",(event)=>{keys[event.key]=false});
 
+
 // let currentHead = Math.floor(Math.random()*6);
-// console.log(currentHead , heads[currentHead]);
 let currentHead = 0;
 
 let zoneX=0;
@@ -70,6 +82,15 @@ hitZone.style.top=zoneY+"px";
 hitZone.style.width=zoneSize+"px";
 hitZone.style.height = zoneSize+"px";
 
+function resizeGame(){
+    let scaleX = window.innerWidth/WIDTH;
+    let scaleY = window.innerHeight/HEIGHT;
+    let scale = Math.min(scaleX,scaleY);
+    game.style.tranform='translate(-50%,-50%) scale($(scale))'
+} 
+window.addEventListener("resize",resizeGame);
+resizeGame();
+
 function limitSpeed(speed){
     if (speed > 0 && speed<minSpeed){
         return minSpeed;
@@ -87,24 +108,24 @@ function hit(cibleX,cibleY){
     let realPosY = cibleY+50;
     let centerX = zoneX+zoneSize/2
     let centerY = zoneY+zoneSize/2
-    console.log(realPosX,realPosY,zoneX,zoneY,zoneSize)
     if (zoneX<realPosX && realPosX<zoneX+zoneSize && zoneY<realPosY && realPosY<zoneY+zoneSize){
-        console.log("perfect "+power+" "+cursorX)
         pvsInfliges = Math.abs(power*.75+10)
     }
     else{
-        console.log("rate")
         let dist = Math.sqrt((Math.abs(centerX-realPosX)**2)+(Math.abs(centerY-realPosY)**2))
-        console.log("distance : "+dist)
         pvsInfliges = Math.abs((power*.75)/(dist/10))
     }
     pvsEnnemi-=pvsInfliges;
-    console.log("pvs " + pvsInfliges)
     pvEnnemi.style.width=pvsEnnemi + "px";
-    pvsMis.textContent=Math.floor(pvsInfliges)
-    pvsMis.style.left=zoneX+zoneSize+40+"px"
-    pvsMis.style.top=zoneY-20+"px"
+    pvsMis.textContent=Math.floor(pvsInfliges);
+    pvsMis.style.left=zoneX+zoneSize+40+"px";
+    pvsMis.style.top=zoneY-20+"px";
     pvsMis.style.visibility="visible";
+}
+
+function prendDegat(){
+    let degatsSubis = Math.abs((arrowX+150)-600)/5+10
+    pvsPlayer -=degatsSubis
 }
 
 function mainLoop(){
@@ -180,6 +201,13 @@ function mainLoop(){
         hitCursor.style.visibility="hidden";
         hitZone.style.visibility="hidden";
         pvsMis.style.visibility="hidden";
+        ennemiTurn=true;
+        currentArrow = Math.floor(Math.random()*4);
+        arrow.textContent=arrows[currentArrow];
+        // arrow.style.font-size="50px";
+        arrow.style.visibility="visible";
+        caseV.style.visibility="visible";
+
     }
     if (hitMove===true){
         if (hitR===true){
@@ -205,6 +233,65 @@ function mainLoop(){
     timeBar.style.height=timeCount+"px";
     timeBar.style.top=(200-timeCount)+202+"px";
     }
+    if (ennemiTurn===true){
+        if (keys["ArrowUp"]){
+            console.log("haut")
+            if (pvsPlayer>0){
+                ennemiTurn=false;
+                if (currentArrow===0){
+                    prendDegat();
+                }
+                else{
+                    pvsPlayer-=75
+                }
+        }
+        }
+        if (keys["ArrowDown"]){
+            console.log("bas")
+            if (pvsPlayer>0){
+                ennemiTurn=false;
+            if (currentArrow===1){
+                prendDegat();
+            }
+            else{
+                pvsPlayer-=75
+            }
+        }
+        }
+        if (keys["ArrowLeft"]){
+            console.log("gauche")
+            if (pvsPlayer>0){
+                ennemiTurn=false;
+                if (currentArrow===2){
+                    prendDegat();
+            }
+            else{
+                pvsPlayer-=75
+            }
+        }
+        }
+        if (keys["ArrowRight"]){
+            console.log("droite")
+            if (pvsPlayer>0){
+                ennemiTurn=false;
+            if (currentArrow===3){
+                    prendDegat();
+            }
+            else{
+                pvsPlayer-=75
+            }
+        }
+        }
+        console.log(pvsPlayer);
+        pvPlayer.style.width=((pvsPlayer*600)/150)+"px";
+        if (arrowX<500){
+            arrowX+=10;
+        }
+        else{
+            arrow.style.visibility="hidden";
+        }
+    }
+    arrow.style.left=(arrowX+150)+"px";
     requestAnimationFrame(mainLoop);
 }
 mainLoop();
