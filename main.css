@@ -184,3 +184,14 @@ html,body{
     padding:0;
     overflow: hidden;
 }
+#pvsPris{
+    left:700px;
+    top:500px;
+    position:absolute;
+    font-family: 'SEGOE UI';
+    font-size: 40px;
+    font-weight: 850;
+    letter-spacing: -.75px;
+    color: red;
+    visibility: hidden;
+}
