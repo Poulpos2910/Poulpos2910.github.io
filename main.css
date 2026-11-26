@@ -1,0 +1,132 @@
+#home{
+    background-color:rgb(19, 143, 157);
+}
+
+#TITRE{
+    font-size: 50;
+    font-family:'SEGOE UI';
+}
+
+#cible{
+    width:200;
+    height:auto;
+    position:absolute;
+    left:100px;
+    top:100px;
+}
+#sigma{
+    width:250px;
+    height:auto;
+    position:absolute;
+    left:400;
+    top:100;
+    visibility: hidden;
+}
+#donald{
+    width:250px;
+    height:auto;
+    position:absolute;
+    left:500;
+    top:100;
+    visibility: hidden;
+}
+#terminator{
+    width:250px;
+    height:auto;
+    position:absolute;
+    left:500;
+    top:100;
+    visibility: hidden;
+}
+#militaire{
+    width:250px;
+    height:auto;
+    position:absolute;
+    left:500;
+    top:100;
+    visibility: hidden;
+}
+#gros{
+    width:250px;
+    height:auto;
+    position:absolute;
+    left:500;
+    top:100;
+    visibility: hidden;
+}
+#natha{
+    width:250px;
+    height:auto;
+    position:absolute;
+    left:500;
+    top:100;
+    visibility: hidden;
+}
+#hitZone{
+    position: absolute;
+    left:625px;
+    top:250px;
+    height:50px;
+    width:100px;
+    background-color:rgba(200,200,0,.8);
+}
+#pvEnnemi{
+    position:absolute;
+    left:585px;
+    top:420px;
+    width:100px;
+    height:10px;
+    background-color: red;
+}
+#fondPvEnnemi{
+    position: absolute;
+    left:584px;
+    top:419px;
+    width:102px;
+    height:12px;
+    background-color: gray;
+}
+#barre{
+    position: absolute;
+    width: 150px;
+    height: auto;
+    left:560px;
+    top:445px;
+    visibility: hidden;
+}
+#hitCursor{
+    position: absolute;
+    width:3px;
+    height:10px;
+    left:562px;
+    top:448px;
+    visibility: hidden;
+    background-color: blueviolet;
+}
+#pvsInfliges{
+    position:absolute;
+    font-family: 'SEGOE UI','bold';
+    font-size: 40px;
+    font-weight: 850;
+    letter-spacing: -.75px;
+    color: red;
+    visibility: hidden;
+    /* left:50; */
+    /* top:50px */
+}
+#fondTime{
+    position: absolute;
+    left:1000px;
+    top:200px;
+    width:12px;
+    height:202px;
+    background-color: gray;
+}
+#time{
+    position: absolute;
+    left:1001px;
+    top:201px;
+    width:10px;
+    height:200px;
+    background-color: blue;
+}
