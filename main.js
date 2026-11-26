@@ -86,7 +86,7 @@ function resizeGame(){
     let scaleX = window.innerWidth/WIDTH;
     let scaleY = window.innerHeight/HEIGHT;
     let scale = Math.min(scaleX,scaleY);
-    game.style.tranform='translate(-50%,-50%) scale($(scale))'
+    game.style.transform=`translate(-50%, -50%) scale(${scale})`
 } 
 window.addEventListener("resize",resizeGame);
 resizeGame();
