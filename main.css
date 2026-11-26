@@ -105,7 +105,7 @@
 }
 #pvsInfliges{
     position:absolute;
-    font-family: 'SEGOE UI','bold';
+    font-family: 'SEGOE UI';
     font-size: 40px;
     font-weight: 850;
     letter-spacing: -.75px;
@@ -129,4 +129,50 @@
     width:10px;
     height:200px;
     background-color: blue;
+}
+#arrow{
+    position: absolute;
+    left:50px;
+    top:480px;
+    font-size: 75px;
+    font-family: "SEGOE UI";
+    font-weight: 800;
+    visibility: hidden;
+}
+#case{
+    position: absolute;
+    left:590px;
+    top:500px;
+    width: 60px;
+    height:60px;
+    background-color: transparent;
+    border:5px solid black;
+    visibility:hidden;
+}
+#fondPvPlayer{
+    position:absolute;
+    left:350px;
+    top:570px;
+    width:600px;
+    height:15px;
+    background-color: gray;
+}
+#pvPlayer{
+    position: absolute;
+    left:351px;
+    top:571px;
+    width:598px;
+    height:13px;
+    background-color: green;
+}
+#game{
+    position:absolute;
+    width:1300px;
+    height:700px;
+
+    left:50%;
+    top:50%;
+
+    transform-origin: center;
+    overflow:hidden;
 }
