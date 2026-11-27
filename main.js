@@ -20,9 +20,28 @@ const caseV = document.getElementById("case");
 const pvPlayer = document.getElementById("pvPlayer");
 const game = document.getElementById("game");
 const pvsPris = document.getElementById("pvsPris");
+const points = document.getElementById("points");
+const annonce = document.getElementById("annonce");
+const voile = document.getElementById("voile");
 
 const WIDTH=1300;
 const HEIGHT=700;
+
+const URL = "https://dyerjiadwfpzowmvuyog.supabase.co";
+const KEY = "sb_publishable_do03ceyJONWVwZz73reeAA_phr9tPHc";
+
+const client = supabase.createClient(URL,KEY);
+const channel = client.channel("jeuPerso",{config:{private:false}});
+
+channel.subscribe((status)=>{if(status==="SUBSCRIBED"){console.log("connecté")}})
+
+voile.style.left="0px";
+voile.style.top="0px";
+voile.style.width=WIDTH+"px";
+voile.style.height=HEIGHT+"px";
+
+// donald.style.visibility="visible";
+
 
 let pvsEnnemi = 100;
 let cibleX = 600;
@@ -48,6 +67,7 @@ let arrowX=0;
 let pvsPlayer=150;
 let currentArrow=0;
 let didPunched=false;
+let playerPoints = 0;
 
 sigma.style.visibility = "visible";
 sigma.style.left = "500px";
@@ -67,6 +87,8 @@ let currentHead = 0;
 let zoneX=0;
 let zoneY=0;
 let zoneSize=0;
+
+function defineZone(){
 if (currentHead===0){
 let side =Math.floor(Math.random()*2);
 zoneSize = Math.floor(Math.random()*15)+10;
@@ -83,6 +105,8 @@ hitZone.style.left=zoneX+"px";
 hitZone.style.top=zoneY+"px";
 hitZone.style.width=zoneSize+"px";
 hitZone.style.height = zoneSize+"px";
+hitZone.style.visibility="visible";
+}
 
 function resizeGame(){
     let scaleX = window.innerWidth/WIDTH;
@@ -102,6 +126,7 @@ function limitSpeed(speed){
     }
     return speed;
 }
+defineZone();
 
 function hit(cibleX,cibleY){
     let realPosCursor = cursorX-75
@@ -118,7 +143,6 @@ function hit(cibleX,cibleY){
         pvsInfliges = Math.abs((power*.75)/(dist/15))
     }
     pvsEnnemi-=pvsInfliges;
-    pvEnnemi.style.width=pvsEnnemi + "px";
     pvsMis.textContent=Math.floor(pvsInfliges);
     pvsMis.style.left=zoneX+zoneSize+40+"px";
     pvsMis.style.top=zoneY-20+"px";
@@ -132,6 +156,7 @@ function prendDegat(){
 }
 
 function mainLoop(){
+    if (pvsPlayer>0){
     if (moveCible===true){
         if (keys["ArrowUp"]){
             if (speedH>-maxSpeed){
@@ -139,19 +164,19 @@ function mainLoop(){
             }
         }
         if (keys["ArrowDown"]){
-                if (speedH<maxSpeed){
-                    speedH+=limitSpeed(speed);
+            if (speedH<maxSpeed){
+                speedH+=limitSpeed(speed);
             }
         }
         if (keys["ArrowLeft"]){
-                if (speedV>-maxSpeed){
+            if (speedV>-maxSpeed){
                     speedV-=limitSpeed(speed);
-            }
+                }
         }
         if (keys["ArrowRight"]){
                 if (speedV<maxSpeed){
                     speedV+=limitSpeed(speed);
-            }
+                }
         }
         speedH=Math.max(-maxSpeed,Math.min(maxSpeed,speedH));
         speedV=Math.max(-maxSpeed,Math.min(maxSpeed,speedV));
@@ -164,23 +189,26 @@ function mainLoop(){
             hitMove=true;
             hitBar.style.visibility="visible";
             hitCursor.style.visibility="visible";
+            cursorSpeed=1.5;
+            cursorX=0;
+            hitCursor.style.left="562px";
             cible.style.visibility="hide";
             spaceAuto = false;
         }
     }
     if (keys[" "]){
         if (moveCible===true){
-            if (pvsEnnemi>0 && spaceAuto === true){
+            if (spaceAuto === true){
                 moveCible=false;
                 hitMove=true;
                 hitBar.style.visibility="visible";
                 hitCursor.style.visibility="visible";
                 cible.style.visibility="hide";
                 spaceAuto = false;
-        }   
+            }   
         
-    }
-    else if (hitMove===true &&spaceAuto===true){
+        }
+        else if (hitMove===true &&spaceAuto===true){
             hit(cibleX,cibleY);
             hitMove=false;
             didHit=true;
@@ -207,10 +235,11 @@ function mainLoop(){
         ennemiTurn=true;
         currentArrow = Math.floor(Math.random()*4);
         arrow.textContent=arrows[currentArrow];
-        // arrow.style.font-size="50px";
+        arrow.style.left="50px";
+        arrowX=0;
         arrow.style.visibility="visible";
         caseV.style.visibility="visible";
-
+        
     }
     if (hitMove===true){
         if (hitR===true){
@@ -229,15 +258,15 @@ function mainLoop(){
         hitCursor.style.left=cursorX+560+"px";
     }
     if (moveCible===true){
-    cibleX+=speedV;
-    cibleY+=speedH;
-    cible.style.left = cibleX + "px";
+        cibleX+=speedV;
+        cibleY+=speedH;
+        cible.style.left = cibleX + "px";
     cible.style.top = cibleY + "px";
     timeBar.style.height=timeCount+"px";
     timeBar.style.top=(200-timeCount)+202+"px";
-    }
+}
 
-    if (ennemiTurn===true){
+if (ennemiTurn===true){
         if (keys["ArrowUp"]){
             if (pvsPlayer>0){
                 ennemiTurn=false;
@@ -248,9 +277,9 @@ function mainLoop(){
                     pvsPlayer-=75;
                     pvsPris.textContent=75;
                 }
-            pvsPris.style.visibility="visible";
-            didPunched=true;
-        }
+                pvsPris.style.visibility="visible";
+                didPunched=true;
+            }
         }
         if (keys["ArrowDown"]){
             if (pvsPlayer>0){
@@ -265,7 +294,7 @@ function mainLoop(){
             pvsPris.style.visibility="visible";
             didPunched=true;
         }
-        }
+    }
         if (keys["ArrowLeft"]){
             if (pvsPlayer>0){
                 ennemiTurn=false;
@@ -284,7 +313,7 @@ function mainLoop(){
             if (pvsPlayer>0){
                 ennemiTurn=false;
             if (currentArrow===3){
-                    pvsPris.textContent=prendDegat();
+                pvsPris.textContent=prendDegat();
             }
             else{
                 pvsPlayer-=75;
@@ -299,22 +328,49 @@ function mainLoop(){
         }
         else{
             arrow.style.visibility="hidden";
-            pvsPlayer-=30
+            ennemiTurn=false;
+            arrowX=0;
+            pvsPlayer-=30;
+            pvsPris.textContent=30;
+            pvsPris.style.visibility="visible";
+            didPunched=true;
         }
-        pvPlayer.style.width=((pvsPlayer*600)/150)+"px";
     }
     if (didPunched===true && hidCount<100){
         hidCount+=1
-        console.log(hidCount)
     }
     if (hidCount===100&&didPunched===true){
         hidCount=0;
         didPunched=false;
+        defineZone();
+        moveCible=true;
+        timeCount=200;
+        arrow.style.left="50px";
+        cible.style.left="100px";
+        speedH=0;
+        speedV=0;
+        cible.style.visibility="visible";
         caseV.style.visibility="hidden";
         arrow.style.visibility="hidden";
         pvsPris.style.visibility='hidden';
     }
+    if (pvsEnnemi<0){
+        pvsEnnemi=100;
+        playerPoints+=100;
+    }
+    if (pvsPlayer<=0){
+
+        annonce.textContent="PERDU";
+        annonce.style.visibility="visible";
+        pvPlayer.style.width="0px";
+        voile.style.visibility="visible";
+    }
     arrow.style.left=(arrowX+150)+"px";
-    requestAnimationFrame(mainLoop);
+}
+points.textContent=playerPoints+" pts";
+points.style.visibility="visible";
+requestAnimationFrame(mainLoop);
+pvEnnemi.style.width=pvsEnnemi + "px";
+pvPlayer.style.width=((pvsPlayer*600)/150)+"px";
 }
 mainLoop();
